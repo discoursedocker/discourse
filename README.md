@@ -31,6 +31,8 @@ Create an admin account
 sudo docker-compose -f tasks/admin/docker-compose.yml run discourse-admin-create
 ```
 
+Point discourse.local to 127.0.0.1 in your /etc/hosts file
+
 Open https://discourse.local/latest in a browser
 
 Note: HTTPS is used even in local with self-signed certificates
