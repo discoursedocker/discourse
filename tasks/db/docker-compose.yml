@@ -4,14 +4,14 @@ networks:
     external: true
 services:
   discourse-db-drop:
-    image: tomasfse/discourse-import-vb4:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
     command: "sh -c 'bundle exec rake db:drop db:create db:migrate'"
     env_file:
       - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
     environment:
       - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
     volumes:
-      - ./data/assets:/usr/share/nginx/html/assets
-      - ./data/uploads:/usr/share/nginx/html/uploads
+      - ../../data/assets:/usr/share/nginx/html/assets
+      - ../../data/uploads:/usr/share/nginx/html/uploads
     networks:
       - discourse_back
