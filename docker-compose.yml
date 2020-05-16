@@ -68,8 +68,3 @@ services:
     - discourse_back
     volumes:
     - ./data/redis:/data
-  #certbot:
-  #  image: certbot/certbot
-  #  volumes:
-  #    - ./data/certbot/conf:/etc/letsencrypt
-  #    - ./data/certbot/www:/var/www/certbot

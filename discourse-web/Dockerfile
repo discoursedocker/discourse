@@ -3,7 +3,7 @@ FROM tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest} as discourse
 FROM nginx
 COPY --from=discourse /home/discourse/discourse/public /usr/share/nginx/html
 
-RUN apt update && apt install -y certbot python-certbot-nginx curl
+RUN apt update && apt install -y certbot python-certbot-nginx curl moreutils
 
 RUN mkdir -p /var/nginx/cache
 COPY nginx.conf.tpl /etc/nginx/nginx.conf.tpl
