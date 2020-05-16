@@ -1,0 +1,17 @@
+version: '2.1'
+networks:
+  discourse_back:
+    external: true
+services:
+  discourse-posts-rebake:
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    build: .
+    env_file:
+      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+    volumes:
+      - ../../data/assets:/home/discourse/discourse/public/assets
+      - ../../data/uploads:/home/discourse/discourse/public/uploads
+    networks:
+      - discourse_back
+    depends_on: 
+      - postgres  
