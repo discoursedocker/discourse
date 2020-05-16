@@ -5,14 +5,26 @@ function main {
     if [ "$1" == "sidekiq" ]; then
         bundle exec sidekiq -q critical -q default -q low -v
     elif [ "$1" == "server" ]; then
-        
-        # Installing Plugins
-        cd ${DISCOURSE_WWW_PATH}/plugins
+
+        # Installing plugins
+        git config --global advice.detachedHead false
         discourse_plugins_list=($(echo $DISCOURSE_PLUGINS | tr "," "\n"))
         for plugin in "${discourse_plugins_list[@]}"; do
-            git clone --single-branch --depth 1 $plugin
+
+            plugin_split=($(echo $plugin | tr "@" "\n"))
+            plugin_url=${plugin_split[0]}
+            plugin_version=${plugin_split[1]}
+            plugin_name=$(basename "$plugin_url" .git)
+
+            git -C "plugins" clone $plugin_url $plugin_name
+            if [ "$plugin_version" != "" ]; then
+                echo "Setting version: $plugin_version"
+                git -C "plugins/$plugin_name" checkout $plugin_version
+            else
+                echo "Setting version: latest"
+            fi
+            
         done
-        cd -
 
         # Starting DB migrations
         bundle exec rake db:migrate
