@@ -1,0 +1,41 @@
+version: '2.1'
+networks:
+  discourse_back:
+    external: true
+services:
+  discourse-import-vbulletin4:
+    image: tomasfse/discourse-import-vb4:${DISCOURSE_DOCKER_VERSION:-latest}
+    build: .
+    env_file:
+      - ../../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+    environment:
+      - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+      - DB_HOST=mysql
+      - DB_NAME=vb4 # Change this to the name of VB4 database.
+      - DB_USER=root
+      - DB_PW=password # Add the password of root user that you provided in the installation.
+      - TABLE_PREFIX= # Change this to correspond to your database prefix (or empty if there is not).
+      - ATTACHMENT_DIR=/var/vb_attachments # The path for attachments you copied from the old vb4 server.
+      - TIMEZONE=Europe/Madrid # Change this if needed
+      - NGINX_REWRITE_SOURCE_TOPIC_REGEX=\\\/(.*)\\\/\1\\- # vbSEO topic urls
+    volumes:
+      - ../../../data/assets:/home/discourse/discourse/public/assets
+      - ../../../data/uploads:/home/discourse/discourse/public/uploads
+      - ../../../data/tasks/import/vbulletin4/vb_attachments:/var/vb_attachments
+      - ../../../data/nginx/301-redirects-global.map:/home/discourse/discourse/script/import_scripts/301-redirects-global.map
+    networks:
+      - discourse_back
+    depends_on: 
+      - mysql  
+  mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_DATABASE: vb4
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ../../../data/tasks/import/vbulletin4/mysql:/var/lib/mysql
+    # ports:
+    #  - 3306:3306/tcp
+    networks:
+      - discourse_back

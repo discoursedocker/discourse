@@ -1,0 +1,16 @@
+version: '2.1'
+networks:
+  discourse_back:
+    external: true
+services:
+  discourse-admin-create:
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: "bundle exec rake admin:create"
+    env_file:
+      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+    volumes:
+      - ./data/assets:/usr/share/nginx/html/assets
+      - ./data/uploads:/usr/share/nginx/html/uploads
+    networks:
+      - discourse_back
+      

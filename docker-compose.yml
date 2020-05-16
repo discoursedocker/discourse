@@ -1,0 +1,75 @@
+version: '2.1'
+networks:
+  discourse_back:
+    external: true
+services:
+  discourse-web:
+    image: tomasfse/discourse-web:${DISCOURSE_DOCKER_VERSION:-latest}
+    build: discourse-web
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-web.env
+    volumes:
+      - ./data/assets:/usr/share/nginx/html/assets
+      - ./data/uploads:/usr/share/nginx/html/uploads
+      #- ./data/nginx/301-redirects-global.map:/etc/nginx/snippets/includes/301-redirects-global.map
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    depends_on:
+    - discourse-api  
+    networks:
+    - discourse_back
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+  discourse-api:
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: server
+    build: discourse-api
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+    volumes:
+      - ./data/assets:/home/discourse/discourse/public/assets
+      - ./data/uploads:/home/discourse/discourse/public/uploads
+      - ./data/backups:/home/discourse/discourse/public/backups
+    depends_on:
+    - redis
+    - postgres
+    networks:
+    - discourse_back
+  discourse-sidekiq:
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: sidekiq
+    restart: always
+    volumes:
+    - ./data/assets:/home/discourse/discourse/public/assets
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+    depends_on:
+    - redis
+    - postgres
+    networks:
+    - discourse_back    
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-10.6}
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/postgres.env
+    volumes:
+    - ./data/postgres:/var/lib/postgresql/data
+    networks:
+    - discourse_back
+  redis:
+    image: redis:${REDIS_VERSION:-4-alpine}
+    restart: always
+    command: ["--appendonly","yes"]
+    networks:
+    - discourse_back
+    volumes:
+    - ./data/redis:/data
+  #certbot:
+  #  image: certbot/certbot
+  #  volumes:
+  #    - ./data/certbot/conf:/etc/letsencrypt
+  #    - ./data/certbot/www:/var/www/certbot
