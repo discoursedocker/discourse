@@ -32,7 +32,8 @@ RUN curl http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - \
       postgresql-client-${PG_MAJOR} \
       postgresql-contrib-${PG_MAJOR} libpq-dev libreadline-dev \
       pngquant \
-      gifsicle 
+      gifsicle \
+      moreutils
 
 RUN curl --silent --location https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - \
  && apt-get update && apt-get install -y --no-install-recommends \
@@ -47,6 +48,8 @@ RUN git clone --branch ${DISCOURSE_VERSION} --single-branch --depth 1 https://gi
 
 RUN gem install bundler --force \
  && bundle install --deployment --retry 3 --jobs 4 --verbose --without test development
+
+RUN mkdir -p ${DISCOURSE_WWW_PATH}/plugins
 
 RUN sed -i 's/daemonize true/daemonize false/g' ./config/puma.rb
 
