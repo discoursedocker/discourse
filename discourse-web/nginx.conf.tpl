@@ -208,9 +208,9 @@ http {
         proxy_hide_header "Set-Cookie";
 
         # note x-accel-redirect can not be used with proxy_cache
-        proxy_cache one;
-        proxy_cache_valid 200 301 302 7d;
-        proxy_cache_valid any 1m;
+        #proxy_cache one;
+        #proxy_cache_valid 200 301 302 7d;
+        #proxy_cache_valid any 1m;
         proxy_pass http://discourse;
         break;
       }
@@ -226,10 +226,10 @@ http {
         proxy_ignore_headers "Set-Cookie";
         proxy_hide_header "Set-Cookie";
 
-        proxy_cache one;
-        proxy_cache_key $uri;
-        proxy_cache_valid 200 7d;
-        proxy_cache_valid 404 1m;
+        #proxy_cache one;
+        #proxy_cache_key $uri;
+        #proxy_cache_valid 200 7d;
+        #proxy_cache_valid 404 1m;
         proxy_set_header Connection "";
 
         proxy_pass https://avatars.discourse.org/;
