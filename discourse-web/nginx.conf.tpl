@@ -19,7 +19,7 @@ http {
     server ${DISCOURSE_API_HOST};
   }
 
-  proxy_cache_path /var/nginx/cache keys_zone=one:10m max_size=200m;
+  # proxy_cache_path /var/nginx/cache keys_zone=one:10m max_size=200m;
 
   # attempt to preserve the proto, must be in http context
   map $http_x_forwarded_proto $thescheme {
