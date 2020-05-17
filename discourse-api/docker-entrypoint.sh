@@ -15,8 +15,11 @@ function main {
             plugin_url=${plugin_split[0]}
             plugin_version=${plugin_split[1]}
             plugin_name=$(basename "$plugin_url" .git)
-
-            git -C "plugins" clone $plugin_url $plugin_name
+            if [ -d "plugins/$plugin_name" ]; then
+              git -C "plugins/$plugin_name" fetch --all
+            else
+              git -C "plugins" clone $plugin_url $plugin_name
+            fi
             if [ "$plugin_version" != "" ]; then
                 echo "Setting version: $plugin_version"
                 git -C "plugins/$plugin_name" checkout $plugin_version
