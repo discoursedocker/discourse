@@ -33,6 +33,7 @@ services:
       - ./data/assets:/home/discourse/discourse/public/assets
       - ./data/uploads:/home/discourse/discourse/public/uploads
       - ./data/backups:/home/discourse/discourse/public/backups
+      - ./data/backups:/home/discourse/discourse/plugins
     depends_on:
     - redis
     - postgres
@@ -44,6 +45,9 @@ services:
     restart: always
     volumes:
     - ./data/assets:/home/discourse/discourse/public/assets
+    - ./data/uploads:/home/discourse/discourse/public/uploads
+    - ./data/backups:/home/discourse/discourse/public/backups
+    - ./data/backups:/home/discourse/discourse/plugins
     env_file:
       - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
     depends_on:
