@@ -4,7 +4,7 @@ networks:
     external: true
 services:
   discourse-web:
-    image: tomasfse/discourse-web:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: tomasfse/discourse-web:${DISCOURSE_DOCKER_VERSION:-2.4.3}
     build: discourse-web
     restart: always
     env_file:
@@ -23,7 +23,7 @@ services:
       - 80:80/tcp
       - 443:443/tcp
   discourse-api:
-    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-2.4.3}
     command: server
     build: discourse-api
     restart: always
@@ -40,7 +40,7 @@ services:
     networks:
     - discourse_back
   discourse-sidekiq:
-    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-2.4.3}
     command: sidekiq
     restart: always
     volumes:
