@@ -4,10 +4,10 @@ networks:
     external: true
 services:
   discourse-import-vbulletin4:
-    image: tomasfse/discourse-import-vb4:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: discoursedocker/discourse-import-vb4:${DISCOURSE_DOCKER_VERSION:-latest}
     build: .
     env_file:
-      - ../../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+      - ../../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
     environment:
       - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
       - DB_HOST=mysql

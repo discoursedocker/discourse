@@ -4,10 +4,10 @@ networks:
     external: true
 services:
   discourse-admin-create:
-    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
     command: "bundle exec rake admin:create"
     env_file:
-      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
     volumes:
       - ./data/assets:/usr/share/nginx/html/assets
       - ./data/uploads:/usr/share/nginx/html/uploads

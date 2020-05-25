@@ -4,10 +4,10 @@ networks:
     external: true
 services:
   discourse-db-drop:
-    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
     command: "sh -c 'bundle exec rake db:drop db:create db:migrate'"
     env_file:
-      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
     environment:
       - DISABLE_DATABASE_ENVIRONMENT_CHECK=1
     volumes:

@@ -1,0 +1,2 @@
+map $request_uri $new_uri {
+}

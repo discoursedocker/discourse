@@ -4,10 +4,10 @@ networks:
     external: true
 services:
   discourse-posts-rebake:
-    image: tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
     build: .
     env_file:
-      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse-api.env
+      - ../../config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
     volumes:
       - ../../data/assets:/home/discourse/discourse/public/assets
       - ../../data/uploads:/home/discourse/discourse/public/uploads

@@ -1,4 +1,4 @@
-FROM tomasfse/discourse-api:${DISCOURSE_DOCKER_VERSION:-latest}
+FROM discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libmariadb-dev-compat \
