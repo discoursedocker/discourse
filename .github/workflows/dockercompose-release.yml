@@ -16,5 +16,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push the images to Docker Hub
         run: DISCOURSE_DOCKER_VERSION=${GITHUB_REF##*/} docker-compose push
+      - name: build latest (cached)
+        run: DISCOURSE_DOCKER_VERSION=latest docker-compose build    
       - name: Tag latest
         run: DISCOURSE_DOCKER_VERSION=latest docker-compose push        
