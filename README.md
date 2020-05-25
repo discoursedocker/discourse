@@ -65,14 +65,14 @@ config/production/postgres.env
 POSTGRES_PASSWORD={random-password}
 ```
 
-config/production/discourse-api.env
+config/production/discourse.env
 ```
 DISCOURSE_HOSTNAME={your-public-domain}
 DISCOURSE_DB_PASSWORD={postgres-defined-password}
 DISCOURSE_SMTP_*={your-smtp-server-details}
 ```
 
-config/production/discourse-web.env
+config/production/discourse-proxy.env
 ```
 DISCOURSE_HOSTNAME={your-public-domain}
 LETSENCRYPT_ENABLED=true

@@ -5,7 +5,7 @@ networks:
 services:
   discourse-proxy:
     image: discoursedocker/discourse-proxy:${DISCOURSE_DOCKER_VERSION:-2.4.3}
-    build: discourse
+    build: discourse-proxy
     restart: always
     env_file:
       - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-proxy.env
