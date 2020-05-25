@@ -11,9 +11,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the images
         run: docker-compose build
-  push:
-    runs-on: ubuntu-latest
-    steps:
       - uses: azure/docker-login@v1
         with:
           login-server: index.docker.io
