@@ -22,7 +22,10 @@ services:
     - discourse_back
   discourse-proxy:
     image: discoursedocker/discourse-proxy:${DISCOURSE_DOCKER_VERSION:-latest}
-    build: discourse-proxy
+    build: 
+      context: discourse-proxy
+      args:
+        - DISCOURSE_DOCKER_VERSION=${DISCOURSE_DOCKER_VERSION:-latest}
     restart: always
     env_file:
       - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-proxy.env
