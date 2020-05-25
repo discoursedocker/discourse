@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the images
-        run: DISCOURSE_DOCKER_VERSION=${GITHUB_SHA::8} docker-compose push discourse-backend discourse-proxy
+        run: DISCOURSE_DOCKER_VERSION=${GITHUB_SHA::8} docker-compose build
       - uses: azure/docker-login@v1
         with:
           login-server: index.docker.io
