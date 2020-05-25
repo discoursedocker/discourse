@@ -3,8 +3,25 @@ networks:
   discourse_back:
     external: true
 services:
+  discourse-backend:
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: server
+    build: discourse
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
+    volumes:
+      - ./data/assets:/home/discourse/discourse/public/assets
+      - ./data/uploads:/home/discourse/discourse/public/uploads
+      - ./data/backups:/home/discourse/discourse/public/backups
+      - ./data/backups:/home/discourse/discourse/plugins
+    depends_on:
+    - redis
+    - postgres
+    networks:
+    - discourse_back
   discourse-proxy:
-    image: discoursedocker/discourse-proxy:${DISCOURSE_DOCKER_VERSION:-2.4.3}
+    image: discoursedocker/discourse-proxy:${DISCOURSE_DOCKER_VERSION:-latest}
     build: discourse-proxy
     restart: always
     env_file:
@@ -22,25 +39,8 @@ services:
     ports:
       - 80:80/tcp
       - 443:443/tcp
-  discourse-backend:
-    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-2.4.3}
-    command: server
-    build: discourse
-    restart: always
-    env_file:
-      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
-    volumes:
-      - ./data/assets:/home/discourse/discourse/public/assets
-      - ./data/uploads:/home/discourse/discourse/public/uploads
-      - ./data/backups:/home/discourse/discourse/public/backups
-      - ./data/backups:/home/discourse/discourse/plugins
-    depends_on:
-    - redis
-    - postgres
-    networks:
-    - discourse_back
   discourse-sidekiq:
-    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-2.4.3}
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
     command: sidekiq
     restart: always
     volumes:
