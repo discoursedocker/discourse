@@ -36,11 +36,11 @@ kubectl proxy --port=8080
 
 Deploy
 ```
-kompose up --push-image=false
+kompose up -f docker-compose-kubernetes.yml --push-image=false
 ```
 
 ## Delete deployment
 
 ```
-kompose down
+kompose down -f docker-compose-kubernetes.yml
 ```

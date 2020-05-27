@@ -1,0 +1,100 @@
+version: '3'
+networks:
+  discourse_back:
+    external: true
+volumes:
+  postgresdata:    
+services:
+  discourse-backend:
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: server
+    build: discourse
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
+    depends_on:
+    - redis
+    - postgres
+    networks:
+    - discourse_back
+    labels:
+      kompose.service.type: nodeport
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'
+          memory: 2048M 
+    ports:
+      - 3000:3000/tcp
+  discourse-proxy:
+    image: discoursedocker/discourse-proxy:${DISCOURSE_DOCKER_VERSION:-latest}
+    build:
+      context: discourse-proxy
+      args:
+        - DISCOURSE_DOCKER_VERSION=${DISCOURSE_DOCKER_VERSION:-latest}
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse-proxy.env
+    depends_on:
+    - discourse-backend
+    networks:
+    - discourse_back
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 256M
+  discourse-sidekiq:
+    image: discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest}
+    command: sidekiq
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/discourse.env
+    depends_on:
+    - redis
+    - postgres
+    networks:
+    - discourse_back
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 1024M
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-10.6}
+    restart: always
+    env_file:
+      - ./config/${DISCOURSE_CONFIG_ENV:-default}/postgres.env
+    volumes:
+      - "postgresdata:/var/lib/postgresql/data"
+    networks:
+    - discourse_back
+    ports:
+      - 5432:5432/tcp      
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 512M
+    labels:
+      kompose.service.type: nodeport
+  redis:
+    image: redis:${REDIS_VERSION:-4-alpine}
+    restart: always
+    command: ["--appendonly","yes"]
+    networks:
+    - discourse_back
+    #volumes:
+    # - ./data/redis:/data
+    ports:
+      - 6379:6379/tcp   
+    deploy:
+      resources:
+        limits:
+          cpus: '0.30'
+          memory: 256M
+    labels:
+      kompose.service.type: nodeport
