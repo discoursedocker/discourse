@@ -14,6 +14,12 @@
 
 Estimated time: less than 2 minutes
 
+Create a discourse.local entry in your /etc/hosts file
+
+```
+echo '127.0.0.1       discourse.local' | sudo tee -a /etc/hosts
+```
+
 Create the docker compose network
 
 ```
@@ -23,8 +29,8 @@ sudo docker network create discourse_back
 Start the services
 
 ```
-sudo docker-compose pull
-sudo docker-compose up -d
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 docker-compose pull
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose up -d
 ```
 
 Wait some minutes until db migrations and static files precompilation finish
@@ -32,10 +38,8 @@ Wait some minutes until db migrations and static files precompilation finish
 Create an admin account
 
 ```
-sudo docker-compose -f tasks/admin/docker-compose.yml run discourse-admin-create
+sudo docker exec -it discourse_discourse-backend_1 bundle exec rake admin:create
 ```
-
-Point discourse.local to 127.0.0.1 in your /etc/hosts file
 
 Open https://discourse.local/latest in a browser
 
@@ -85,8 +89,8 @@ Note: Your website will run with HTTPS out of the box thanks to Lets Encrypt
 Start the services
 
 ```
-sudo DISCOURSE_CONFIG_ENV=production docker-compose pull
-sudo DISCOURSE_CONFIG_ENV=production docker-compose up -d
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose pull
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose up -d
 ```
 
 Wait some minutes until db migrations and static files precompilation finish
@@ -131,6 +135,25 @@ sudo docker-compose up -d
 ```
 
 Note: For forum migrations, the import script must generate a map file with the redirections
+
+## Upgrading version
+
+Note: Always check changelog for Breaking Compatibility changes
+
+1. Make a Backup
+
+2. Check config changes changes between your version and new version "config/default" <> "config/production
+
+3. Download new version, delete compiled assets (css, js, etc...) and run the new version. Database schema will be migrated and assets will be compiled
+```
+sudo docker-compose stop
+sudo docker-compose rm
+sudo git pull
+sudo git checkout ${new_version}
+sudo DISCOURSE_DOCKER_VERSION=${new_version} DISCOURSE_CONFIG_ENV=production docker-compose pull
+sudo rm -rf data/assets
+sudo DISCOURSE_DOCKER_VERSION=${new_version} DISCOURSE_CONFIG_ENV=production docker-compose up -d
+```
 
 ## Troubleshooting
 
