@@ -30,7 +30,7 @@ Start the services
 
 ```
 sudo DISCOURSE_DOCKER_VERSION=v2.5.0 docker-compose pull
-sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose up -d
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 docker-compose up -d
 ```
 
 Wait some minutes until db migrations and static files precompilation finish
@@ -89,7 +89,7 @@ Note: Your website will run with HTTPS out of the box thanks to Lets Encrypt
 Start the services
 
 ```
-sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose pull
+sudo DISCOURSE_DOCKER_VERSION=v2.5.0 docker-compose pull
 sudo DISCOURSE_DOCKER_VERSION=v2.5.0 DISCOURSE_CONFIG_ENV=production docker-compose up -d
 ```
 
@@ -98,7 +98,7 @@ Wait some minutes until db migrations and static files precompilation finish
 Create an admin account
 
 ```
-sudo DISCOURSE_CONFIG_ENV=production docker-compose -f tasks/admin/docker-compose.yml run discourse-admin-create
+sudo docker exec -it discourse_discourse-backend_1 bundle exec rake admin:create
 ```
 
 Open https://{your-public-domain}/latest in a browser
