@@ -1,13 +1,5 @@
 # Tasks
 
-## Admin
-
-### Create an admin account
-
-```
-sudo docker-compose -f tasks/admin/docker-compose.yml run discourse-admin-create
-```
-
 ## Import
 
 ### Import from vbulletin4
