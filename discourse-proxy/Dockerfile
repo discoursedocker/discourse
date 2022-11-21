@@ -1,6 +1,6 @@
 ARG DISCOURSE_DOCKER_VERSION
 FROM discoursedocker/discourse:${DISCOURSE_DOCKER_VERSION:-latest} as discourse
-FROM nginx
+FROM nginx:1.17.10
 COPY --from=discourse /home/discourse/discourse/public /usr/share/nginx/html
 
 RUN apt update && apt install -y certbot python-certbot-nginx curl moreutils
