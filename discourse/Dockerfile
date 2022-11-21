@@ -1,6 +1,6 @@
 FROM ruby:2.6.5
 
-ENV DISCOURSE_VERSION=v2.5.0 \
+ENV DISCOURSE_VERSION=v2.8.11 \
     DISCOURSE_OPT_PATH=/opt/discourse \
     DISCOURSE_WWW_PATH=/home/discourse/discourse \
     PG_MAJOR=10 \
